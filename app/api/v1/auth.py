@@ -4,10 +4,16 @@ from app.db.session import get_db
 from app.schemas.users import UserCreate, UserOut, UserLogin, Token
 from app.services import auth_service
 from app.core.security import create_access_token
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user,allow_admin,allow_any_user
 
 router = APIRouter()
 
+@router.get("/admin-stats")
+def get_admin_stats(current_user: dict = Depends(allow_admin)):
+    return {
+        "message": "Welcome, Overlord.",
+        "stats": {"total_users": 1000, "revenue": "$50,000"}
+    }
 @router.get("/me")
 def read_users_me(current_user: dict = Depends(get_current_user)):
     return {
